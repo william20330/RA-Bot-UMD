@@ -8,7 +8,6 @@ scheduler = BackgroundScheduler()
 
 app = Flask(__name__)
 scheduler = BackgroundScheduler()
-bot_active = False
 
 def check_and_send_holiday_message():
     # Replace 'us' with the correct country code
@@ -35,7 +34,7 @@ def start_scheduler():
 def webhook():
     data = request.get_json()
     log('Received {}'.format(data))
-
+    bot_active = False
     # Check if the message contains "ra bot"
     if data['name'] != 'RA Bot' and '/ra bot' in data['text'].lower() and not bot_active:
         bot_active = True
