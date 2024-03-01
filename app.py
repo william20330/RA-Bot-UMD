@@ -37,10 +37,9 @@ def webhook():
     log('Received {}'.format(data))
 
     # Check if the message contains "ra bot"
-    if data['name'] != 'RA Bot':
-        if '/ra bot' in data['text'].lower() and not bot_active:
-            bot_active = True
-            send_message('- Type /menu for more options and resources\n - Type /exit at anytime to leave the bot')
+    if data['name'] != 'RA Bot' and '/ra bot' in data['text'].lower() and not bot_active:
+        bot_active = True
+        send_message('- Type /menu for more options and resources\n - Type /exit at anytime to leave the bot')
         if '/menu' in data['text'].lower() and bot_active:
             send_message('Here are the options (press number associated with choice): \
                         \n 1 - Phone Number for 4Work (issues regarding facilites, cleanliness, etc) \
