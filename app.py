@@ -25,8 +25,10 @@ def send_message(msg):
         'bot_id': os.getenv('GROUPME_BOT_ID'),
         'text': msg,
     }
-    # Encode data as JSON instead of using urlencode
-    request = Request(url, json.dumps(data).encode(), headers={'Content-Type': 'application/json'})
+    data = json.dumps(data).encode('utf-8')  # Encode the data to bytes
+    request = Request(url, data)  # Create the request object with data
+    request.add_header('Content-Type', 'application/json')  # Correct way to add headers
+
     response = urlopen(request)
     log('Message sent: {}'.format(response.read().decode()))
 
