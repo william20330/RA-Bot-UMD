@@ -18,7 +18,7 @@ def callback():
         message_text = data['text'].lower()
         group_id = data['group_id']
 
-        if message_text == 'ra bot':
+        if message_text == 'raBot':
             bot_active = True
             send_message(group_id, "RA Bot is now active. Please select an option from the menu.")
         elif bot_active:
