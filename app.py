@@ -1,7 +1,6 @@
 import os
 import sys
-from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+import requests
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -19,14 +18,12 @@ def webhook():
 
 def send_message(msg):
     url = 'https://api.groupme.com/v3/bots/post'
-
     data = {
         'bot_id': os.getenv('GROUPME_BOT_ID'),
         'text': msg,
     }
-    request = Request(url, urlencode(data).encode())
-    response = urlopen(request)
-    log('Message sent: {}'.format(response.read().decode()))
+    response = requests.post(url, data=data)
+    log('Message sent: {}'.format(response.text))
 
 def log(msg):
     print(str(msg))
