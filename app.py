@@ -12,7 +12,7 @@ bot_active = False  # Variable to keep track of whether the bot is active or not
 # Define a variable to track the last time a message was sent
 last_message_sent_time = 0
 # Define a cooldown period in seconds (e.g., 60 seconds)
-cooldown_period = 60
+cooldown_period = 10
 
 def check_and_send_holiday_message():
     # Replace 'us' with the correct country code
