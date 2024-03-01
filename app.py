@@ -12,7 +12,7 @@ def webhook():
   log('Recieved {}'.format(data))
 
   # We don't want to reply to ourselves!
-  if data['name'] != 'ra-bot-umd':
+  if data['name'] != 'ra bot':
     # Check if the message contains "ra bot"
     if 'ra bot' in data['text'].lower():
         send_message('hi')
