@@ -12,7 +12,7 @@ def webhook():
   log('Recieved {}'.format(data))
 
   # We don't want to reply to ourselves!
-  if data['name'] != 'ra-bot-umdt':
+  if data['name'] != 'ra-bot-umd':
     msg = '{}, you sent "{}".'.format(data['name'], data['text'])
     send_message(msg)
 
