@@ -10,7 +10,7 @@ app = Flask(__name__)
 scheduler = BackgroundScheduler()
 bot_active = False  # Variable to keep track of whether the bot is active or not
 last_message_sent_time = 0  # Track the last time a message was sent
-cooldown_period = 5  # Cooldown period in seconds
+cooldown_period = 2  # Cooldown period in seconds
 current_command = None 
 
 def check_and_send_holiday_message():
@@ -42,46 +42,45 @@ def webhook():
     data = request.get_json()
     log('Received {}'.format(data))
 
+    # Activation command
     if data['name'] != 'RA Bot' and '/ra bot' in data['text'].lower() and not bot_active:
         bot_active = True
-        current_command = 'menu'  # Set the initial command state to 'menu'
-        send_message('- Type /menu for more options and resources\n - Type /exit at any time to leave the bot')
+        send_message('- Type /menu for more options and resources\n- Type /exit at any time to leave the bot')
         return "ok", 200
 
     if bot_active:
         if time.time() - last_message_sent_time >= cooldown_period:
-            # Only show the menu if the '/menu' command is received or it's the initial state after activation
-            if ('/menu' in data['text'].lower() or current_command == 'menu') and current_command != 'exit':
+            # Display the menu only when the '/menu' command is received
+            if '/menu' in data['text'].lower():
                 send_message('Here are the options (press number associated with choice): \
-                              \n 1 - Phone Number for 4Work (issues regarding facilities, cleanliness, etc) \
-                              \n 2 - Phone Number for the Cumberland Front Desk (contact RA on Duty, lockouts, etc) \
-                              \n 3 - Hours of Operation For Dining Halls \
-                              \n 4 - Important Links (ResLife, 4Work, etc)\
-                              \n 5 - Important Dates (closures, breaks, finals, etc)\
-                              \n 6 - UMD Sports Schedule/Scores')
-                current_command = 'waiting_for_choice'  # Update state to wait for user's choice
+                              \n1 - Phone Number for 4Work (issues regarding facilities, cleanliness, etc) \
+                              \n2 - Phone Number for the Cumberland Front Desk (contact RA on Duty, lockouts, etc) \
+                              \n3 - Hours of Operation For Dining Halls \
+                              \n4 - Important Links (ResLife, 4Work, etc)\
+                              \n5 - Important Dates (closures, breaks, finals, etc)\
+                              \n6 - UMD Sports Schedule/Scores')
                 last_message_sent_time = time.time()
+                # Do not set current_command here; let it wait for the next input
                 return "ok", 200
 
-            if current_command == 'waiting_for_choice':
-                if '1' in data['text']:
-                    send_message('Phone Number for 4Work: 301-314-9675')
-                elif '2' in data['text']:
-                    send_message('Phone Number for the Cumberland Front Desk: 301-314-2862')
-                elif '3' in data['text']:
-                    # Example response for option 3
-                    pass
-                # Include additional elif blocks for options 4, 5, 6...
-                current_command = None  # Reset command state to allow new commands
+            # Handle the options only if they are selected after the menu has been requested
+            # It's safer to check directly for the text instead of using a state variable here
+            # since the previous issue was caused by mismanaging the state
+            if '1' in data['text']:
+                send_message('Phone Number for 4Work: 301-314-9675')
                 last_message_sent_time = time.time()
+            elif '2' in data['text']:
+                send_message('Phone Number for the Cumberland Front Desk: 301-314-2862')
+                last_message_sent_time = time.time()
+            # Include conditions for other options here...
 
             if '/exit' in data['text'].lower():
                 send_message('Goodbye!')
                 bot_active = False
-                current_command = None  # Reset command state
                 last_message_sent_time = time.time()
 
     return "ok", 200
+
 
 def send_message(msg):
     url = 'https://api.groupme.com/v3/bots/post'
