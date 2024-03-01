@@ -12,7 +12,7 @@ def webhook():
     log('Received {}'.format(data))
 
     # Check if the message contains "ra bot"
-    if 'ra bot' in data['text'].lower() and data['name'] != 'ra bot':
+    if '/ra' in data['text'].lower() and data['name'] != 'RA Bot':
         send_message('hi')
 
     return "ok", 200
