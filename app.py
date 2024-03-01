@@ -12,7 +12,7 @@ bot_active = False  # Variable to keep track of whether the bot is active or not
 # Define a variable to track the last time a message was sent
 last_message_sent_time = 0
 # Define a cooldown period in seconds (e.g., 60 seconds)
-cooldown_period = 5
+cooldown_period = 5 # 5 seconds
 
 def check_and_send_holiday_message():
     # Replace 'us' with the correct country code
@@ -42,12 +42,7 @@ def webhook():
     data = request.get_json()
     log('Received {}'.format(data))
     
-    # Check if the message contains "/ra bot" to activate the bot
-    if data['name'] != 'RA Bot' and '/ra bot' in data['text'].lower() and not bot_active:
-        bot_active = True
-        send_message('- Type /menu for more options and resources\n - Type /exit at anytime to leave the bot')
-    # Check if the bot is active and respond to user commands
-    elif bot_active:
+    if bot_active:
         if time.time() - last_message_sent_time >= cooldown_period:
             if '/menu' in data['text'].lower():
                 send_message('Here are the options (press number associated with choice): \
@@ -88,8 +83,18 @@ def webhook():
                 send_message('Goodbye!')
                 bot_active = False  # Deactivate the bot
                 last_message_sent_time = time.time()  # Update last message sent time
+            else:
+                send_message('Invalid command. Type /menu for available options.')
+        else:
+            send_message("Please wait a moment before sending another command.")
+    else:
+        # Check if the message contains "/ra bot" to activate the bot
+        if data['name'] != 'RA Bot' and '/ra bot' in data['text'].lower():
+            bot_active = True
+            send_message('- Type /menu for more options and resources\n - Type /exit at anytime to leave the bot')
     
     return "ok", 200
+
 
 def send_message(msg):
     url = 'https://api.groupme.com/v3/bots/post'
