@@ -40,6 +40,7 @@ def webhook():
     if data['name'] != 'RA Bot':
         if '/ra bot' in text:
             send_message('Welcome to RA Bot! Choose an option:\n- /menu\n- /exit')
+            listening = True  # Start the bot listening to further messages
         elif '/exit' in text:
             send_message('Goodbye!')
             listening = False  # Stop the bot from listening to further messages
