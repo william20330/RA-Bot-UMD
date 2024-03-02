@@ -35,17 +35,17 @@ def webhook():
 
     if data['name'] != 'RA Bot':
         if '/ra bot' in text:
-            send_message('Welcome to RA Bot! Choose an option:\n- /menu\n- /exit')
+            send_message('Welcome to RA Bot! Choose an option:\n/menu\n/exit')
         elif '/exit' in text:
             send_message('Goodbye!')
         elif '/menu' in text:
             send_message('Here are the options:\n' +
-                         '1 - Phone Number for 4Work (issues regarding facilities, cleanliness, etc)\n' +
-                         '2 - Phone Number for the Cumberland Front Desk (contact RA on Duty, lockouts, etc)\n' +
-                         '3 - Hours of Operation For Dining Halls\n' +
-                         '4 - Important Links (ResLife, 4Work, etc)\n' +
-                         '5 - Important Dates (closures, breaks, finals, etc)\n' +
-                         '6 - UMD Sports Schedule/Scores')
+                         '/1 - Phone Number for 4Work (issues regarding facilities, cleanliness, etc)\n' +
+                         '/2 - Phone Number for the Cumberland Front Desk (contact RA on Duty, lockouts, etc)\n' +
+                         '/3 - Hours of Operation For Dining Halls\n' +
+                         '/4 - Important Links (ResLife, 4Work, etc)\n' +
+                         '/5 - Important Dates (closures, breaks, finals, etc)\n' +
+                         '/6 - UMD Sports Schedule/Scores')
         else:
             handle_commands(text)
 
