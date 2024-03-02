@@ -48,7 +48,7 @@ def webhook():
                          '/5 - Important Dates (closures, breaks, finals, etc)\n' +
                          '/6 - UMD Sports Schedule/Scores', user_id)
         else:
-            handle_commands(text)
+            handle_commands(text, user_id)
 
     return "ok", 200
 
