@@ -29,10 +29,6 @@ def start_scheduler():
 
 @app.route('/', methods=['POST'])
 def webhook():
-    global listening  # Access the global listening variable
-    if not listening:
-        return "ok", 200  # Do nothing if the bot is set to not listen
-
     data = request.get_json()
     log('Received {}'.format(data))
     text = data['text'].lower()
@@ -40,11 +36,9 @@ def webhook():
     if data['name'] != 'RA Bot':
         if '/ra bot' in text:
             send_message('Welcome to RA Bot! Choose an option:\n- /menu\n- /exit')
-            listening = True  # Start the bot listening to further messages
         elif '/exit' in text:
             send_message('Goodbye!')
-            listening = False  # Stop the bot from listening to further messages
-        elif '/menu' in text and listening:
+        elif '/menu' in text:
             send_message('Here are the options:\n' +
                          '1 - Phone Number for 4Work (issues regarding facilities, cleanliness, etc)\n' +
                          '2 - Phone Number for the Cumberland Front Desk (contact RA on Duty, lockouts, etc)\n' +
@@ -53,8 +47,7 @@ def webhook():
                          '5 - Important Dates (closures, breaks, finals, etc)\n' +
                          '6 - UMD Sports Schedule/Scores')
         else:
-            if listening:
-                handle_commands(text)  # Only handle commands if listening is True
+            handle_commands(text)
 
     return "ok", 200
 
