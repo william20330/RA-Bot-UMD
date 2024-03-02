@@ -6,6 +6,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 scheduler = BackgroundScheduler()
+listening = True
 
 # Function to check and send a holiday message
 def check_and_send_holiday_message():
@@ -28,6 +29,10 @@ def start_scheduler():
 
 @app.route('/', methods=['POST'])
 def webhook():
+    global listening  # Access the global listening variable
+    if not listening:
+        return "ok", 200  # Do nothing if the bot is set to not listen
+
     data = request.get_json()
     log('Received {}'.format(data))
     text = data['text'].lower()
@@ -37,9 +42,8 @@ def webhook():
             send_message('Welcome to RA Bot! Choose an option:\n- /menu\n- /exit')
         elif '/exit' in text:
             send_message('Goodbye!')
-            # Implement functionality to stop listening to chat messages here if needed
-            # For now, we send a goodbye message. Stopping the bot would depend on the deployment setup.
-        elif '/menu' in text:
+            listening = False  # Stop the bot from listening to further messages
+        elif '/menu' in text and listening:
             send_message('Here are the options:\n' +
                          '1 - Phone Number for 4Work (issues regarding facilities, cleanliness, etc)\n' +
                          '2 - Phone Number for the Cumberland Front Desk (contact RA on Duty, lockouts, etc)\n' +
@@ -48,7 +52,8 @@ def webhook():
                          '5 - Important Dates (closures, breaks, finals, etc)\n' +
                          '6 - UMD Sports Schedule/Scores')
         else:
-            handle_commands(text)
+            if listening:
+                handle_commands(text)  # Only handle commands if listening is True
 
     return "ok", 200
 
