@@ -32,12 +32,13 @@ def webhook():
     data = request.get_json()
     log('Received {}'.format(data))
     text = data['text'].lower()
+    user_id = data['user_id']
 
     if data['name'] != 'RA Bot':
         if '/ra bot' in text:
-            send_message('Welcome to RA Bot! Choose an option:\n/menu\n/exit')
+            send_message('Welcome to RA Bot! Choose an option:\n/menu\n/exit', user_id)
         elif '/exit' in text:
-            send_message('Goodbye!')
+            send_message('Goodbye!', user_id)
         elif '/menu' in text:
             send_message('Here are the options:\n' +
                          '/1 - Phone Number for 4Work (issues regarding facilities, cleanliness, etc)\n' +
@@ -45,47 +46,53 @@ def webhook():
                          '/3 - Hours of Operation For Dining Halls\n' +
                          '/4 - Important Links (ResLife, 4Work, etc)\n' +
                          '/5 - Important Dates (closures, breaks, finals, etc)\n' +
-                         '/6 - UMD Sports Schedule/Scores')
+                         '/6 - UMD Sports Schedule/Scores', user_id)
         else:
             handle_commands(text)
 
     return "ok", 200
 
-def handle_commands(text):
+def handle_commands(text, user_id):
     if text == '/1':
-        send_message('Phone Number for 4Work: 301-314-9675')
+        send_message('Phone Number for 4Work: 301-314-9675', user_id)
     elif text == '/2':
-        send_message('Phone Number for the Cumberland Front Desk: 301-314-2862')
+        send_message('Phone Number for the Cumberland Front Desk: 301-314-2862', user_id)
     elif text == '/3':
         send_message('Dining Hall Hours: \
                         \n Yahentamitsi: Monday - Friday: 7:00am - 9:00pm | Saturday - Sunday: 10:00am - 9:00pm\
                         \n 251 North: Monday - Thursday: 8:00am - 10:00pm | Friday - Sunday: 8:00am - 7:00pm\
-                        \n South Campus: Monday - Friday: 7:00am - 9:00pm | Saturday - Sunday: 10:00am - 9:00pm')
+                        \n South Campus: Monday - Friday: 7:00am - 9:00pm | Saturday - Sunday: 10:00am - 9:00pm', user_id)
     elif text == '/4':
         send_message('Important Links: \
                         \n ResLife: https://reslife.umd.edu/ \
                         \n 4Work: https://4work.umd.edu/ \
                         \n UMD: https://www.umd.edu/\
                         \n Dining Services: https://dining.umd.edu/\
-                        \n StarRez: https://www.starrez.umd.edu/')
+                        \n StarRez: https://www.starrez.umd.edu/', user_id)
     elif text == '/5':
         send_message('Important Dates: \
                         \n Spring Break: March 17-24\
                         \n Last Day of Classes: May 9\
                         \n Reading Day: May 10\
-                        \n Finals: May 11-17')
+                        \n Finals: May 11-17', user_id)
     elif text == '/6':
-        send_message('UMD Sports Schedule/Scores: https://umterps.com/calendar.aspx')
+        send_message('UMD Sports Schedule/Scores: https://umterps.com/calendar.aspx', user_id)
 
-def send_message(msg):
+def send_message(msg, user_id=None):
     url = 'https://api.groupme.com/v3/bots/post'
     data = {
         'bot_id': os.getenv('GROUPME_BOT_ID'),
-        'text': msg,
+        'text': msg
     }
+    if user_id:
+        data['attachments'] = [{
+            'type': 'mentions',
+            'user_ids': [user_id]
+        }]
     headers = {'Content-Type': 'application/json'}
     response = requests.post(url, json=data, headers=headers)
     log('Message sent: {}'.format(response.text))
+
 
 def log(msg):
     print(str(msg))
