@@ -56,7 +56,26 @@ def handle_commands(text):
         send_message('Phone Number for 4Work: 301-314-9675')
     elif text == '2':
         send_message('Phone Number for the Cumberland Front Desk: 301-314-2862')
-    # Add additional command handling here for options 3 through 6
+    elif text == '3':
+        send_message('Dining Hall Hours: \
+                        \n Yahentamitsi: Monday - Friday: 7:00am - 9:00pm | Saturday - Sunday: 10:00am - 9:00pm\
+                        \n 251 North: Monday - Thursday: 8:00am - 10:00pm | Friday - Sunday: 8:00am - 7:00pm\
+                        \n South Campus: Monday - Friday: 7:00am - 9:00pm | Saturday - Sunday: 10:00am - 9:00pm')
+    elif text == '4':
+        send_message('Important Links: \
+                        \n ResLife: https://reslife.umd.edu/ \
+                        \n 4Work: https://4work.umd.edu/ \
+                        \n UMD: https://www.umd.edu/\
+                        \n Dining Services: https://dining.umd.edu/\
+                        \n StarRez: https://www.starrez.umd.edu/')
+    elif text == '5':
+        send_message('Important Dates: \
+                        \n Spring Break: March 17-24\
+                        \n Last Day of Classes: May 9\
+                        \n Reading Day: May 10\
+                        \n Finals: May 11-17')
+    elif text == '6':
+        send_message('UMD Sports Schedule/Scores: https://umterps.com/calendar.aspx')
 
 def send_message(msg):
     url = 'https://api.groupme.com/v3/bots/post'
